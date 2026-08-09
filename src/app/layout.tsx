@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import '@/styles/globals.css';
 // import { TrpcProvider } from '@/client/trpc-provider';
 import type { Metadata, Viewport } from 'next';
-import { Inter as FontSans } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Analytics } from '@/components/analytics';
 import { siteConfig } from '@/configs/site';
@@ -13,13 +12,12 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 
-const fontSans = FontSans({
-  subsets: ['latin'],
+const fontSans = localFont({
+  src: '../assets/fonts/Inter-Regular.ttf',
   variable: '--font-sans',
   display: 'swap',
 });
 
-// Font files can be colocated inside of `pages`
 const fontHeading = localFont({
   src: '../assets/fonts/CalSans-SemiBold.woff2',
   variable: '--font-heading',

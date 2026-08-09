@@ -50,10 +50,12 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
   };
 
   return (
-    <section aria-label="Carousel of shows" className="relative my-[3vw] p-0">
+    <section
+      aria-label={`${title} carousel`}
+      className="relative my-8 p-0 lg:my-12">
       {shows.length !== 0 && (
         <div className="space-y-1 sm:space-y-2.5">
-          <h2 className="m-0 px-[4%] text-lg font-semibold text-foreground/80 transition-colors hover:text-foreground sm:text-xl 2xl:px-[60px]">
+          <h2 className="m-0 px-4 font-heading text-2xl font-semibold tracking-tight text-foreground sm:px-6 lg:px-10 lg:text-3xl 2xl:px-[60px]">
             {title ?? '-'}
           </h2>
           <div className="relative w-full items-center justify-center overflow-hidden">
@@ -61,7 +63,7 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
               aria-label="Scroll to left"
               variant="ghost"
               className={cn(
-                'absolute left-0 top-0 z-10 mr-2 hidden h-full w-[4%] items-center justify-center rounded-l-none bg-transparent py-0 text-transparent hover:bg-secondary/90 hover:text-foreground md:block 2xl:w-[60px]',
+                'absolute left-0 top-0 z-10 mr-2 hidden h-full w-[4%] items-center justify-center rounded-l-none bg-black/20 py-0 text-white opacity-0 backdrop-blur transition hover:bg-black/60 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-orange-400 md:block 2xl:w-[60px]',
                 isScrollable ? 'md:block' : 'md:hidden',
               )}
               onClick={() => scrollToDirection('left')}>
@@ -69,7 +71,7 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
             </Button>
             <div
               ref={showsRef}
-              className="no-scrollbar m-0 grid auto-cols-[calc(100%/3)] grid-flow-col overflow-x-auto overflow-y-hidden px-[4%] py-0 duration-500 ease-in-out sm:auto-cols-[25%] md:touch-pan-y lg:auto-cols-[20%] xl:auto-cols-[calc(100%/6)] 2xl:px-[60px]">
+              className="no-scrollbar xxs:auto-cols-[38%] m-0 grid auto-cols-[42%] grid-flow-col gap-3 overflow-x-auto overflow-y-hidden scroll-smooth px-4 py-3 duration-500 ease-in-out sm:auto-cols-[28%] sm:px-6 md:touch-pan-y lg:auto-cols-[20%] lg:px-10 xl:auto-cols-[calc((100%-5rem)/6)] 2xl:px-[60px]">
               {shows.map((show) => (
                 <ShowCard key={show.id} show={show} pathname={pathname} />
               ))}
@@ -77,7 +79,7 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
             <Button
               aria-label="Scroll to right"
               variant="ghost"
-              className="absolute right-0 top-0 z-10 m-0 ml-2 hidden h-full w-[4%] items-center justify-center rounded-r-none bg-transparent py-0 text-transparent hover:bg-secondary/70 hover:text-foreground md:block 2xl:w-[60px]"
+              className="absolute right-0 top-0 z-10 m-0 ml-2 hidden h-full w-[4%] items-center justify-center rounded-r-none bg-black/20 py-0 text-white opacity-0 backdrop-blur transition hover:bg-black/60 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-orange-400 md:block 2xl:w-[60px]"
               onClick={() => scrollToDirection('right')}>
               <Icons.chevronRight className="h-8 w-8" aria-hidden="true" />
             </Button>
@@ -105,14 +107,7 @@ export const ShowCard = ({
 
   return (
     // <picture className="relative aspect-[2/3] md:aspect-video">
-    <picture className="relative aspect-[2/3]">
-      <a
-        className="pointer-events-none"
-        aria-hidden={false}
-        role="link"
-        aria-label={getNameFromShow(show)}
-        href={`/${show.media_type}/${getSlug(show.id, getNameFromShow(show))}`}
-      />
+    <div className="group relative aspect-[2/3] overflow-hidden rounded-2xl bg-muted shadow-sm shadow-black/20 ring-1 ring-white/10 transition duration-300 focus-within:ring-2 focus-within:ring-orange-400 md:hover:-translate-y-1 md:hover:shadow-xl md:hover:shadow-orange-950/30">
       {/* <source */}
       {/*   // srcSet={`https://image.tmdb.org/t/p/w342/${show.poster_path ?? show.backdrop_path}`} */}
       {/*   srcSet={ */}
@@ -124,19 +119,10 @@ export const ShowCard = ({
       {/*   } */}
       {/*   media="(min-width: 780px)" */}
       {/* /> */}
-      <img
-        src={
-          show.poster_path ?? show.backdrop_path
-            ? `https://image.tmdb.org/t/p/w500/${
-                show.poster_path ?? show.backdrop_path
-              }`
-            : '/images/grey-thumbnail.jpg'
-        }
-        alt={show.title ?? show.name ?? 'poster'}
-        className="h-full w-full cursor-pointer rounded-lg px-1 transition-all md:hover:scale-110"
-        style={{
-          objectFit: 'cover',
-        }}
+      <button
+        type="button"
+        className="block h-full w-full text-left"
+        aria-label={`Open details for ${getNameFromShow(show)}`}
         onClick={() => {
           const name = getNameFromShow(show);
           const path: string =
@@ -151,9 +137,29 @@ export const ShowCard = ({
             open: true,
             play: true,
           });
-        }}
-        onError={imageOnErrorHandler}
-      />
-    </picture>
+        }}>
+        <img
+          src={
+            show.poster_path ?? show.backdrop_path
+              ? `https://image.tmdb.org/t/p/w500/${
+                  show.poster_path ?? show.backdrop_path
+                }`
+              : '/images/grey-thumbnail.jpg'
+          }
+          alt={show.title ?? show.name ?? 'poster'}
+          className="h-full w-full cursor-pointer object-cover transition duration-500 group-hover:scale-105"
+          loading="lazy"
+          onError={imageOnErrorHandler}
+        />
+      </button>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-3 opacity-100">
+        <p className="line-clamp-2 text-sm font-bold text-white sm:text-base">
+          {getNameFromShow(show)}
+        </p>
+        <p className="mt-1 text-xs font-medium text-orange-200">
+          {show.release_date ?? show.first_air_date ?? 'Tap for details'}
+        </p>
+      </div>
+    </div>
   );
 };

@@ -9,11 +9,11 @@ import { env } from '@/env.mjs';
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: env.NEXT_PUBLIC_SITE_NAME,
-  author: env.NEXT_PUBLIC_SITE_NAME,
-  slogan: 'Watch TV Shows & Movies Online.',
+  name: 'Chillkaro',
+  author: 'Chillkaro',
+  slogan: 'Movies/series dekho',
   description:
-    'Watch movies & TV shows online or stream right to your smart TV, game console, PC, Mac, mobile, tablet and more.',
+    'Movies/series dekho on any screen with a fast, clean discovery and watching experience.',
   keywords: [
     'watch movies',
     'movies online',
@@ -60,20 +60,7 @@ export const siteConfig = {
       icon: Icons.youtube,
     },
   ],
-  footerItems: [
-    //{ title: 'Audio Description', href: '/' },
-    //{ title: 'Help Center', href: '/' },
-    //{ title: 'Gift Cards', href: '/' },
-    //{ title: 'Media Center', href: '/' },
-    //{ title: 'Investor Relations', href: '/' },
-    //{ title: 'Jobs', href: '/' },
-    //{ title: 'Terms of Use', href: '/terms-of-use' },
-    //{ title: 'Privacy', href: '/' },
-    //{ title: 'Legal Notices', href: '/' },
-    //{ title: 'Cookie Preferences', href: '/' },
-    //{ title: 'Corporate Information', href: '/' },
-    //{ title: 'Contact Us', href: '/' },
-  ],
+  footerItems: [] as { title: string; href?: string }[],
   mainNav: [
     {
       title: 'Home',

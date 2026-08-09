@@ -146,3 +146,30 @@ body,
   background-color: rgba(17, 17, 17, 0);
   background-image: -webkit-linear-gradient(top, rgba(17, 17, 17, 0), #111);
 }
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: radial-gradient(
+        circle at top left,
+        hsl(25 95% 53% / 0.18),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at top right,
+        hsl(330 80% 55% / 0.14),
+        transparent 24rem
+      ),
+      hsl(var(--background));
+  }
+
+  a,
+  button,
+  input,
+  [role='button'] {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}

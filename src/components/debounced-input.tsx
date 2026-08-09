@@ -67,18 +67,24 @@ export function DebouncedInput({
     debounceInput(event.target.value);
   };
 
+  const clearValue = () => {
+    if (inputRef.current) inputRef.current.value = '';
+    void onChange('');
+    inputRef.current?.focus();
+  };
+
   return (
     <div className={cn('relative', containerClassName)}>
       <Input
         ref={inputRef}
         id={id}
         type="text"
-        placeholder="Search..."
+        placeholder="Search movies, series..."
         className={cn(
-          'h-auto rounded-none py-1.5 pl-8 text-sm transition-all duration-300',
+          'border-white/15 h-11 rounded-full bg-background/80 py-2 pl-10 pr-10 text-base shadow-sm outline-none transition-all duration-300 placeholder:text-muted-foreground focus-visible:ring-orange-400',
           open
-            ? 'w-28 border md:w-40  lg:w-60'
-            : 'w-0 border-none bg-transparent',
+            ? 'w-[min(58vw,22rem)] border sm:w-72 lg:w-96'
+            : 'w-0 border-none bg-transparent p-0',
           className,
         )}
         defaultValue={value}
@@ -91,8 +97,8 @@ export function DebouncedInput({
         aria-label="Search"
         variant="ghost"
         className={cn(
-          'absolute top-1/2 h-auto -translate-y-1/2 rounded-full p-1 hover:bg-transparent',
-          open ? 'left-1' : 'left-[9px]',
+          'min-h-10 min-w-10 absolute top-1/2 -translate-y-1/2 rounded-full p-2 hover:bg-orange-500/10 focus-visible:ring-orange-400',
+          open ? 'left-0' : 'left-0',
         )}
         onClick={() => {
           if (!inputRef.current) {
@@ -104,11 +110,21 @@ export function DebouncedInput({
         <Icons.search
           className={cn(
             'transition-opacity hover:opacity-75 active:scale-95',
-            open ? 'h-4 w-4' : 'h-5 w-5',
+            open ? 'h-5 w-5' : 'h-6 w-6',
           )}
           aria-hidden="true"
         />
       </Button>
+      {open && value ? (
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label="Clear search"
+          className="min-h-10 min-w-10 absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-2 hover:bg-orange-500/10 focus-visible:ring-orange-400"
+          onClick={clearValue}>
+          <Icons.close className="h-5 w-5" aria-hidden="true" />
+        </Button>
+      ) : null}
     </div>
   );
 }
