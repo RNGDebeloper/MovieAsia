@@ -15,6 +15,8 @@ export default async function SearchPage({ searchParams }: SearchProps) {
     redirect('/home');
   }
 
-  const shows = await MovieService.searchMovies(searchParams.q);
+  const shows = await MovieService.searchMovies(searchParams.q).catch(() => ({
+    results: [],
+  }));
   return <SearchContainer query={searchParams.q} shows={shows.results} />;
 }

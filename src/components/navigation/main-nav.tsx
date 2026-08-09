@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { type Show, type NavItem } from '@/types';
+import { type NavItem, type Show } from '@/types';
 import Link from 'next/link';
 import {
   cn,
@@ -37,18 +37,10 @@ interface SearchResult {
 export function MainNav({ items }: MainNavProps) {
   const path = usePathname();
   const router = useRouter();
-  // search store
   const searchStore = useSearchStore();
   const [isScrolled, setIsScrolled] = React.useState(false);
 
-  React.useEffect(() => {
-    window.addEventListener('popstate', handlePopstateEvent, false);
-    return () => {
-      window.removeEventListener('popstate', handlePopstateEvent, false);
-    };
-  }, []);
-
-  const handlePopstateEvent = () => {
+  const handlePopstateEvent = React.useCallback(() => {
     const pathname = window.location.pathname;
     const search: string = getSearchValue('q');
 
@@ -59,22 +51,26 @@ export function MainNav({ items }: MainNavProps) {
       searchStore.setOpen(true);
       searchStore.setLoading(true);
       searchStore.setQuery(search);
-      setTimeout(() => {
-        handleDefaultSearchBtn();
-      }, 10);
-      setTimeout(() => {
-        handleDefaultSearchInp();
-      }, 20);
+      setTimeout(() => handleDefaultSearchBtn(), 10);
+      setTimeout(() => handleDefaultSearchInp(), 20);
       MovieService.searchMovies(search)
         .then((response: SearchResult) => {
           void searchStore.setShows(response.results);
         })
         .catch((e) => {
           console.error(e);
+          void searchStore.setShows([]);
         })
         .finally(() => searchStore.setLoading(false));
     }
-  };
+  }, [searchStore]);
+
+  React.useEffect(() => {
+    window.addEventListener('popstate', handlePopstateEvent, false);
+    return () => {
+      window.removeEventListener('popstate', handlePopstateEvent, false);
+    };
+  }, [handlePopstateEvent]);
 
   async function searchShowsByQuery(value: string) {
     if (!value?.trim()?.length) {
@@ -83,34 +79,46 @@ export function MainNav({ items }: MainNavProps) {
       } else {
         window.history.pushState(null, '', path);
       }
+      searchStore.reset();
       return;
     }
 
     if (getSearchValue('q')?.trim()?.length) {
-      window.history.replaceState(null, '', `search?q=${value}`);
+      window.history.replaceState(
+        null,
+        '',
+        `/search?q=${encodeURIComponent(value)}`,
+      );
     } else {
-      window.history.pushState(null, '', `search?q=${value}`);
+      window.history.pushState(
+        null,
+        '',
+        `/search?q=${encodeURIComponent(value)}`,
+      );
     }
 
     searchStore.setQuery(value);
+    searchStore.setOpen(true);
     searchStore.setLoading(true);
-    const shows = await MovieService.searchMovies(value);
-    searchStore.setLoading(false);
-    void searchStore.setShows(shows.results);
-
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      const shows = await MovieService.searchMovies(value);
+      void searchStore.setShows(shows.results);
+    } catch (error) {
+      console.error(error);
+      void searchStore.setShows([]);
+    } finally {
+      searchStore.setLoading(false);
     }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // change background color on scroll
   React.useEffect(() => {
-    const changeBgColor = () => {
-      window.scrollY > 0 ? setIsScrolled(true) : setIsScrolled(false);
-    };
+    const changeBgColor = () => setIsScrolled(window.scrollY > 0);
+    changeBgColor();
     window.addEventListener('scroll', changeBgColor);
     return () => window.removeEventListener('scroll', changeBgColor);
-  }, [isScrolled]);
+  }, []);
 
   const handleChangeStatusOpen = (value: boolean): void => {
     searchStore.setOpen(value);
@@ -119,111 +127,110 @@ export function MainNav({ items }: MainNavProps) {
 
   return (
     <nav
+      aria-label="Primary navigation"
       className={cn(
-        'relative flex h-12 w-full items-center justify-between bg-gradient-to-b from-secondary/70 from-10% px-[4vw] transition-colors duration-300 md:sticky md:h-16',
-        isScrolled ? 'bg-secondary shadow-md' : 'bg-transparent',
+        'min-h-16 sticky top-0 z-50 flex w-full items-center justify-between gap-3 border-b border-white/10 px-4 py-3 backdrop-blur-xl transition-colors duration-300 sm:px-6 lg:px-10',
+        isScrolled
+          ? 'bg-background/95 shadow-lg shadow-black/20'
+          : 'bg-background/70',
       )}>
-      <div className="flex items-center gap-6 md:gap-10">
+      <div className="flex min-w-0 items-center gap-3 lg:gap-8">
         <Link
           href="/"
-          className="hidden md:block"
+          className="group flex min-w-max items-center gap-3 rounded-full"
           onClick={() => handleChangeStatusOpen(false)}>
-          <div className="flex items-center space-x-2">
-            <Icons.logo className="h-6 w-6" aria-hidden="true" />
-            <span className="inline-block font-bold">{siteConfig.name}</span>
-            <span className="sr-only">Home</span>
-          </div>
+          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-orange-500 via-rose-500 to-fuchsia-600 shadow-lg shadow-orange-900/30 transition-transform group-hover:scale-105">
+            <Icons.play
+              className="h-5 w-5 fill-white text-white"
+              aria-hidden="true"
+            />
+          </span>
+          <span className="xxs:block hidden leading-tight">
+            <span className="block font-heading text-lg tracking-tight text-foreground sm:text-xl">
+              {siteConfig.name}
+            </span>
+            <span className="hidden text-[11px] font-medium uppercase tracking-[0.18em] text-orange-400 sm:block">
+              {siteConfig.slogan}
+            </span>
+          </span>
+          <span className="sr-only">Home</span>
         </Link>
         {items?.length ? (
-          <nav className="hidden gap-6 md:flex">
-            {items?.map(
-              (item, index) =>
-                item.href && (
-                  <Link
-                    key={index}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center text-sm font-medium text-foreground/60 transition hover:text-foreground/80',
-                      path === item.href && 'font-bold text-foreground',
-                      item.disabled && 'cursor-not-allowed opacity-80',
-                    )}
-                    onClick={() => handleChangeStatusOpen(false)}>
-                    {item.title}
-                  </Link>
-                ),
+          <div className="hidden items-center gap-1 rounded-full border border-white/10 bg-card/50 p-1 md:flex">
+            {items.map((item, index) =>
+              item.href ? (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className={cn(
+                    'rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-orange-500/10 hover:text-foreground xl:text-base',
+                    path === item.href &&
+                      'bg-orange-500 text-white shadow-sm shadow-orange-950/40 hover:bg-orange-500 hover:text-white',
+                    item.disabled && 'pointer-events-none opacity-50',
+                  )}
+                  onClick={() => handleChangeStatusOpen(false)}>
+                  {item.title}
+                </Link>
+              ) : null,
             )}
-          </nav>
+          </div>
         ) : null}
         <div className="block md:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="flex items-center space-x-2 px-0 hover:bg-transparent focus:ring-0"
-                // className="h-auto px-2 py-1.5 text-base hover:bg-neutral-800 focus:ring-0 dark:hover:bg-neutral-800 lg:hidden"
-              >
-                <Icons.logo className="h-6 w-6" />
-                <span className="text-base font-bold">Menu</span>
+                className="min-h-11 rounded-full px-3 text-base font-semibold hover:bg-orange-500/10 focus-visible:ring-orange-400">
+                Menu
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="start"
-              sideOffset={20}
-              // className="w-52 overflow-y-auto overflow-x-hidden rounded-sm bg-neutral-800 text-slate-200 dark:bg-neutral-800 dark:text-slate-200"
-              className="w-52 overflow-y-auto overflow-x-hidden rounded-sm">
-              <DropdownMenuLabel>
-                <Link
-                  href="/"
-                  className="flex items-center justify-center"
-                  onClick={() => handleChangeStatusOpen(false)}>
-                  {/* <Icons.logo */}
-                  {/*   className="mr-2 h-4 w-4 text-red-600" */}
-                  {/*   aria-hidden="true" */}
-                  {/* /> */}
-                  <span className="">{siteConfig.name}</span>
-                </Link>
+              sideOffset={14}
+              className="w-64 rounded-2xl p-2">
+              <DropdownMenuLabel className="text-center">
+                <span className="block font-heading text-lg">
+                  {siteConfig.name}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {siteConfig.slogan}
+                </span>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {items?.map((item, index) => (
-                <DropdownMenuItem
-                  key={index}
-                  asChild
-                  className="items-center justify-center">
-                  {item.href && (
+              {items?.map((item, index) =>
+                item.href ? (
+                  <DropdownMenuItem
+                    key={index}
+                    asChild
+                    className="rounded-xl p-0">
                     <Link
+                      className={cn(
+                        'min-h-11 w-full rounded-xl px-4 py-3 text-base font-semibold',
+                        path === item.href && 'bg-orange-500 text-white',
+                      )}
                       href={item.href}
                       onClick={() => handleChangeStatusOpen(false)}>
-                      {/* {item.icon &&  */}
-                      {/*   <item.icon className="mr-2 h-4 w-4" aria-hidden="true" /> */}
-                      {/* } */}
-                      <span
-                        className={cn(
-                          'line-clamp-1 text-foreground/60 hover:text-foreground/80',
-                          path === item.href && 'font-bold text-foreground',
-                        )}>
-                        {item.title}
-                      </span>
+                      {item.title}
                     </Link>
-                  )}
-                </DropdownMenuItem>
-              ))}
+                  </DropdownMenuItem>
+                ) : null,
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-2 md:flex-none">
         <DebouncedInput
           id="search-input"
           open={searchStore.isOpen}
           value={searchStore.query}
           onChange={searchShowsByQuery}
           onChangeStatusOpen={handleChangeStatusOpen}
-          containerClassName={cn(path === '/' ? 'hidden' : 'flex')}
+          containerClassName={cn(
+            path === '/' ? 'hidden' : 'flex',
+            'min-w-0 max-w-full',
+          )}
         />
-
-
-
-        
         <ThemeToggle />
       </div>
     </nav>

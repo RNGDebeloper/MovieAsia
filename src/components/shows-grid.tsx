@@ -21,28 +21,25 @@ const ShowsGrid = ({ shows, query }: SearchedShowsProps) => {
   const searchStore = useSearchStore();
 
   return (
-    <section aria-label="Grid of shows" className="container w-full max-w-none">
+    <section
+      aria-label="Grid of shows"
+      className="container w-full max-w-none px-4 sm:px-6 lg:px-10">
       {modalStore.open && <ShowModal />}
-      <div className="main-view mt-4 min-h-[800px] pt-[5%]" id="main-view">
+      <div className="main-view mt-4 min-h-[70vh] pt-8" id="main-view">
         {query && searchStore.loading ? (
           <ShowsSkeleton classname="pl-0" />
         ) : query && !shows?.length ? (
-          <div className="text-center">
-            <div className="inline-block text-left text-sm">
-              <p className="mb-4">{`Your search for "${query}" did not have any matches.`}</p>
-              <p className="mb-4">Suggestions:</p>
-              <ul className="list-disc pl-8">
-                <li>Try different keywords</li>
-                <li>Looking for a movie or TV show?</li>
-                <li>Try using a movie, TV show title, an actor or director</li>
-                <li>Try a genre, like comedy, romance, sports, or drama</li>
-              </ul>
-            </div>
+          <div className="mx-auto max-w-xl rounded-3xl border border-white/10 bg-card/70 p-8 text-center shadow-xl">
+            <p className="text-2xl font-bold">No matches for “{query}”</p>
+            <p className="mt-3 text-muted-foreground">
+              Try a movie, series, actor, director, or genre like comedy,
+              romance, sports, or drama.
+            </p>
           </div>
         ) : (
           <div
             className={cn(
-              'xxs:grid-cols-2 xxs:gap-x-1.5 xxs:gap-y-5 grid w-fit gap-y-3.5 xs:grid-cols-3 xs:gap-y-7 sm:grid-cols-3 sm:gap-y-10 md:grid-cols-4 md:gap-y-12 lg:gap-y-14 xl:grid-cols-6 xl:gap-y-16',
+              'xxs:grid-cols-2 grid w-full grid-cols-2 gap-3 xs:grid-cols-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8',
               query && 'max-sm:grid-cols-3 max-[375px]:grid-cols-2',
             )}>
             {shows.map((show: Show) => (
