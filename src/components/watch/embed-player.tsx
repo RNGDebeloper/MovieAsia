@@ -1,32 +1,28 @@
 'use client';
+
 import React from 'react';
 
 interface EmbedPlayerProps {
   url: string;
 }
 
-function EmbedPlayer(props: EmbedPlayerProps) {
-  React.useEffect(() => {
-    if (ref.current) {
-      ref.current.src = props.url;
-    }
-
-    const iframe: HTMLIFrameElement | null = ref.current;
-    iframe?.addEventListener('load', handleIframeLoaded);
-    return () => {
-      iframe?.removeEventListener('load', handleIframeLoaded);
-    };
-  }, []);
-
+function EmbedPlayer({ url }: EmbedPlayerProps) {
   const ref = React.useRef<HTMLIFrameElement>(null);
 
-  const handleIframeLoaded = () => {
-    if (!ref.current) {
-      return;
-    }
-    const iframe: HTMLIFrameElement = ref.current;
-    if (iframe) iframe.style.opacity = '1';
-  };
+  React.useEffect(() => {
+    const iframe = ref.current;
+    if (!iframe) return;
+
+    const handleIframeLoaded = () => {
+      iframe.style.opacity = '1';
+    };
+
+    iframe.addEventListener('load', handleIframeLoaded);
+
+    return () => {
+      iframe.removeEventListener('load', handleIframeLoaded);
+    };
+  }, [url]);
 
   return (
     <div
@@ -34,15 +30,31 @@ function EmbedPlayer(props: EmbedPlayerProps) {
         width: '100%',
         height: '100%',
         position: 'absolute',
+        inset: 0,
         backgroundColor: '#000',
-      }}>
+        overflow: 'hidden',
+      }}
+    >
       <iframe
         ref={ref}
+        src={url}
         width="100%"
         height="100%"
         allowFullScreen
-        style={{ opacity: 0 }}
-        referrerPolicy="no-referrer-when-downgrade"
+        loading="eager"
+        referrerPolicy="no-referrer"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        style={{
+          opacity: 0,
+          border: 'none',
+          transition: 'opacity 0.25s ease',
+        }}
+        onLoad={() => {
+          if (ref.current) {
+            ref.current.style.opacity = '1';
+          }
+        }}
       />
     </div>
   );
