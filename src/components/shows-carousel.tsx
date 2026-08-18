@@ -50,10 +50,10 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
   };
 
   return (
-    <section aria-label="Carousel of shows" className="relative my-[3vw] p-0">
+    <section aria-label="Carousel of shows" className="relative my-8 p-0">
       {shows.length !== 0 && (
         <div className="space-y-1 sm:space-y-2.5">
-          <h2 className="m-0 px-[4%] text-lg font-semibold text-foreground/80 transition-colors hover:text-foreground sm:text-xl 2xl:px-[60px]">
+          <h2 className="m-0 px-[4%] text-xl font-bold tracking-tight text-foreground sm:text-2xl 2xl:px-[60px]">
             {title ?? '-'}
           </h2>
           <div className="relative w-full items-center justify-center overflow-hidden">
@@ -133,7 +133,7 @@ export const ShowCard = ({
             : '/images/grey-thumbnail.jpg'
         }
         alt={show.title ?? show.name ?? 'poster'}
-        className="h-full w-full cursor-pointer rounded-lg px-1 transition-all md:hover:scale-110"
+        className="h-full w-full cursor-pointer rounded-2xl border border-white/10 bg-white/5 object-cover p-0.5 shadow-lg transition duration-300 md:hover:-translate-y-1 md:hover:scale-105"
         style={{
           objectFit: 'cover',
         }}
