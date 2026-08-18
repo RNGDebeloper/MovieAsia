@@ -82,8 +82,8 @@ const Hero = ({ shows }: HeroProps) => {
                 <h1 className="text-3xl font-bold tracking-tight sm:text-[4vw] lg:text-[3vw]">
                   {randomShow?.title ?? randomShow?.name}
                 </h1>
-                <div className="flex flex-wrap gap-2 text-sm font-semibold text-white/85 md:text-[1.2vw]">
-                  <p className="text-green-600">
+                <div className="text-white/85 flex flex-wrap gap-2 text-sm font-semibold md:text-[1.2vw]">
+                  <p className="text-red-500">
                     {Math.round(randomShow?.vote_average * 10) ?? '-'}% Match
                   </p>
                   {/* <p className="text-gray-300">{randomShow?.release_date ?? "-"}</p> */}

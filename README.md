@@ -26,6 +26,9 @@ A movie and series streaming website.
 4. Create .env file cp .env.example .env
 5. Start the development server: npm run dev
 
+## Admin credentials
+
+Admin login is configured only with server-side environment variables. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` in your local `.env` file or deployment provider (for example, Vercel Environment Variables). Do not commit real production credentials.
 
 ## Contributing
 
@@ -46,4 +49,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - The Movie Database (TMDb) for providing the movie data through their API.
 - Vidsrc.to for providing the movie streaming links.
+
 ---

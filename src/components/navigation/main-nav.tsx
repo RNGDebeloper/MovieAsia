@@ -125,7 +125,7 @@ export function MainNav({ items }: MainNavProps) {
       )}>
       <div className="flex items-center gap-6 md:gap-10">
         <Link
-          href="/"
+          href="/home"
           className="hidden md:block"
           onClick={() => handleChangeStatusOpen(false)}>
           <div className="flex items-center space-x-2">
@@ -173,7 +173,7 @@ export function MainNav({ items }: MainNavProps) {
               className="w-52 overflow-y-auto overflow-x-hidden rounded-sm">
               <DropdownMenuLabel>
                 <Link
-                  href="/"
+                  href="/home"
                   className="flex items-center justify-center"
                   onClick={() => handleChangeStatusOpen(false)}>
                   {/* <Icons.logo */}
@@ -218,12 +218,9 @@ export function MainNav({ items }: MainNavProps) {
           value={searchStore.query}
           onChange={searchShowsByQuery}
           onChangeStatusOpen={handleChangeStatusOpen}
-          containerClassName={cn(path === '/' ? 'hidden' : 'flex')}
+          containerClassName={cn(path === '/home' ? 'flex' : 'flex')}
         />
 
-
-
-        
         <ThemeToggle />
       </div>
     </nav>

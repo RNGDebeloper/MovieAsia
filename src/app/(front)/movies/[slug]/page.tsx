@@ -1,18 +1,12 @@
-import { type Metadata } from 'next';
-import { handleMetadata } from '@/lib/utils';
-import MoviePage from '../page';
-
-type Props = {
-  params: { slug: string };
-  searchParams: Record<string, string | string[] | undefined>;
-};
+import { redirect } from 'next/navigation';
 
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return handleMetadata(params.slug, 'movies', 'movie');
-}
-
-export default async function Home() {
-  return MoviePage();
+export default function MovieDetailsRedirect({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const id = params.slug.split('-').pop() ?? params.slug;
+  redirect(`/watch/movie/${id}`);
 }

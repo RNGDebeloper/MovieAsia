@@ -1,18 +1,12 @@
-import { type Metadata } from 'next';
-import { handleMetadata } from '@/lib/utils';
-import TvShowPage from '../page';
-
-type Props = {
-  params: { slug: string };
-  searchParams: Record<string, string | string[] | undefined>;
-};
+import { redirect } from 'next/navigation';
 
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return handleMetadata(params.slug, 'tv-shows', 'tv');
-}
-
-export default async function Home() {
-  return TvShowPage();
+export default function TvDetailsRedirect({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const id = params.slug.split('-').pop() ?? params.slug;
+  redirect(`/watch/tv/${id}`);
 }

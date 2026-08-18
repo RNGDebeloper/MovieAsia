@@ -8,6 +8,7 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
+    ADMIN_USERNAME: z.string().optional(),
     ADMIN_PASSWORD: z.string().optional(),
     ADMIN_SESSION_SECRET: z.string().optional(),
     MAINTENANCE_MODE: z.enum(['true', 'false']).optional(),
@@ -40,8 +41,10 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    NEXT_PUBLIC_APP_URL:
+      process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
     NODE_ENV: process.env.NODE_ENV,
+    ADMIN_USERNAME: process.env.ADMIN_USERNAME,
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
@@ -49,11 +52,15 @@ export const env = createEnv({
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID:
       process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
     NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME ?? 'Ottfree',
-    NEXT_PUBLIC_DEFAULT_VIDEO_SERVER: process.env.NEXT_PUBLIC_DEFAULT_VIDEO_SERVER,
-    NEXT_PUBLIC_DISABLED_VIDEO_SERVERS: process.env.NEXT_PUBLIC_DISABLED_VIDEO_SERVERS,
-    NEXT_PUBLIC_MAINTENANCE_MESSAGE: process.env.NEXT_PUBLIC_MAINTENANCE_MESSAGE,
+    NEXT_PUBLIC_DEFAULT_VIDEO_SERVER:
+      process.env.NEXT_PUBLIC_DEFAULT_VIDEO_SERVER,
+    NEXT_PUBLIC_DISABLED_VIDEO_SERVERS:
+      process.env.NEXT_PUBLIC_DISABLED_VIDEO_SERVERS,
+    NEXT_PUBLIC_MAINTENANCE_MESSAGE:
+      process.env.NEXT_PUBLIC_MAINTENANCE_MESSAGE,
     NEXT_PUBLIC_ANNOUNCEMENT_TITLE: process.env.NEXT_PUBLIC_ANNOUNCEMENT_TITLE,
-    NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE: process.env.NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE,
+    NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE:
+      process.env.NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE,
     NEXT_PUBLIC_ANNOUNCEMENT_LINK: process.env.NEXT_PUBLIC_ANNOUNCEMENT_LINK,
     NEXT_PUBLIC_TWITTER: process.env.NEXT_PUBLIC_TWITTER ?? 'https://x.com',
     NEXT_PUBLIC_FACEBOOK:
