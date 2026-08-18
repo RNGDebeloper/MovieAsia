@@ -67,7 +67,7 @@ const Hero = ({ shows }: HeroProps) => {
     <section aria-label="Hero" className="w-full">
       {randomShow && (
         <>
-          <div className="absolute inset-0 z-0 h-[100vw] w-full sm:h-[56.25vw]">
+          <div className="absolute inset-0 z-0 h-[115vw] w-full overflow-hidden sm:h-[56.25vw]">
             <Image
               src={`https://image.tmdb.org/t/p/original/${
                 randomShow?.backdrop_path ?? randomShow?.poster_path ?? ''
@@ -78,11 +78,11 @@ const Hero = ({ shows }: HeroProps) => {
               priority
             />
             <div className="absolute bottom-0 left-0 right-0 top-0">
-              <div className="absolute bottom-[35%] left-[4%] top-0 z-10 flex w-[36%] flex-col justify-end space-y-2">
-                <h1 className="text-[3vw] font-bold">
+              <div className="absolute bottom-[20%] left-[4%] top-0 z-10 flex w-[88%] flex-col justify-end space-y-3 sm:bottom-[28%] sm:w-[55%] lg:w-[42%]">
+                <h1 className="text-3xl font-bold tracking-tight sm:text-[4vw] lg:text-[3vw]">
                   {randomShow?.title ?? randomShow?.name}
                 </h1>
-                <div className="flex space-x-2 text-[2vw] font-semibold md:text-[1.2vw]">
+                <div className="flex flex-wrap gap-2 text-sm font-semibold text-white/85 md:text-[1.2vw]">
                   <p className="text-green-600">
                     {Math.round(randomShow?.vote_average * 10) ?? '-'}% Match
                   </p>
@@ -90,7 +90,7 @@ const Hero = ({ shows }: HeroProps) => {
                   <p>{randomShow?.release_date ?? '-'}</p>
                 </div>
                 {/* <p className="line-clamp-4 text-sm text-gray-300 md:text-base"> */}
-                <p className="hidden text-[1.2vw] sm:line-clamp-3">
+                <p className="line-clamp-3 max-w-2xl text-sm leading-6 text-white/75 sm:text-[1.2vw]">
                   {randomShow?.overview ?? '-'}
                 </p>
                 <div className="mt-[1.5vw] flex items-center space-x-2">
@@ -127,7 +127,7 @@ const Hero = ({ shows }: HeroProps) => {
                 </div>
               </div>
             </div>{' '}
-            <div className="opacity-71 absolute inset-0 right-[26.09%] z-[8] bg-gradient-to-r from-secondary to-85%"></div>
+            <div className="absolute inset-0 right-[10%] z-[8] bg-gradient-to-r from-[#05060b] via-[#05060b]/75 to-transparent"></div>
             <div className="absolute bottom-[-1px] left-0 right-0 z-[8] h-[14.7vw] bg-gradient-to-b from-background/0 from-30% via-background/30 via-50% to-background to-80%"></div>
           </div>
           <div className="relative inset-0 -z-50 mb-5 pb-[60%] sm:pb-[40%]"></div>

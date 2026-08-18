@@ -8,6 +8,9 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
+    ADMIN_PASSWORD: z.string().optional(),
+    ADMIN_SESSION_SECRET: z.string().optional(),
+    MAINTENANCE_MODE: z.enum(['true', 'false']).optional(),
   },
 
   /**
@@ -16,10 +19,16 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_APP_URL: z.string().url(),
-    NEXT_PUBLIC_TMDB_TOKEN: z.string(),
+    NEXT_PUBLIC_APP_URL: z.string().url().default('http://localhost:3000'),
+    NEXT_PUBLIC_TMDB_TOKEN: z.string().default(''),
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: z.string().optional(),
-    NEXT_PUBLIC_SITE_NAME: z.string(),
+    NEXT_PUBLIC_SITE_NAME: z.string().default('Ottfree'),
+    NEXT_PUBLIC_DEFAULT_VIDEO_SERVER: z.string().optional(),
+    NEXT_PUBLIC_DISABLED_VIDEO_SERVERS: z.string().optional(),
+    NEXT_PUBLIC_MAINTENANCE_MESSAGE: z.string().optional(),
+    NEXT_PUBLIC_ANNOUNCEMENT_TITLE: z.string().optional(),
+    NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE: z.string().optional(),
+    NEXT_PUBLIC_ANNOUNCEMENT_LINK: z.string().url().optional(),
     NEXT_PUBLIC_TWITTER: z.string().url().optional(),
     NEXT_PUBLIC_FACEBOOK: z.string().url().optional(),
     NEXT_PUBLIC_INSTAGRAM: z.string().url().optional(),
@@ -31,12 +40,21 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
     NODE_ENV: process.env.NODE_ENV,
-    NEXT_PUBLIC_TMDB_TOKEN: process.env.NEXT_PUBLIC_TMDB_TOKEN,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    ADMIN_SESSION_SECRET: process.env.ADMIN_SESSION_SECRET,
+    MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
+    NEXT_PUBLIC_TMDB_TOKEN: process.env.NEXT_PUBLIC_TMDB_TOKEN ?? '',
     NEXT_PUBLIC_GOOGLE_ANALYTICS_ID:
       process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
-    NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME,
+    NEXT_PUBLIC_SITE_NAME: process.env.NEXT_PUBLIC_SITE_NAME ?? 'Ottfree',
+    NEXT_PUBLIC_DEFAULT_VIDEO_SERVER: process.env.NEXT_PUBLIC_DEFAULT_VIDEO_SERVER,
+    NEXT_PUBLIC_DISABLED_VIDEO_SERVERS: process.env.NEXT_PUBLIC_DISABLED_VIDEO_SERVERS,
+    NEXT_PUBLIC_MAINTENANCE_MESSAGE: process.env.NEXT_PUBLIC_MAINTENANCE_MESSAGE,
+    NEXT_PUBLIC_ANNOUNCEMENT_TITLE: process.env.NEXT_PUBLIC_ANNOUNCEMENT_TITLE,
+    NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE: process.env.NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE,
+    NEXT_PUBLIC_ANNOUNCEMENT_LINK: process.env.NEXT_PUBLIC_ANNOUNCEMENT_LINK,
     NEXT_PUBLIC_TWITTER: process.env.NEXT_PUBLIC_TWITTER ?? 'https://x.com',
     NEXT_PUBLIC_FACEBOOK:
       process.env.NEXT_PUBLIC_FACEBOOK ?? 'https://facebook.com',

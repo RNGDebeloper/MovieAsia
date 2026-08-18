@@ -159,7 +159,6 @@ class MovieService extends BaseService {
         page ?? 1
       }`,
     );
-    console.log(data.results[0]?.media_type);
     data.results.sort((a, b) => {
       return b.popularity - a.popularity;
     });
