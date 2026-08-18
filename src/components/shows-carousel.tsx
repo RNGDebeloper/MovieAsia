@@ -1,13 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { useModalStore } from '@/stores/modal';
 import { MediaType, type Show } from '@/types';
+import Link from 'next/link';
 
-import { cn, getNameFromShow, getSlug } from '@/lib/utils';
+import { cn, getNameFromShow } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { usePathname } from 'next/navigation';
 
 interface ShowsCarouselProps {
   title: string;
@@ -15,8 +14,6 @@ interface ShowsCarouselProps {
 }
 
 const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
-  const pathname = usePathname();
-
   const showsRef = React.useRef<HTMLDivElement>(null);
   const [isScrollable, setIsScrollable] = React.useState(false);
 
@@ -71,7 +68,7 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
               ref={showsRef}
               className="no-scrollbar m-0 grid auto-cols-[calc(100%/3)] grid-flow-col overflow-x-auto overflow-y-hidden px-[4%] py-0 duration-500 ease-in-out sm:auto-cols-[25%] md:touch-pan-y lg:auto-cols-[20%] xl:auto-cols-[calc(100%/6)] 2xl:px-[60px]">
               {shows.map((show) => (
-                <ShowCard key={show.id} show={show} pathname={pathname} />
+                <ShowCard key={show.id} show={show} />
               ))}
             </div>
             <Button
@@ -90,13 +87,7 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
 
 export default ShowsCarousel;
 
-export const ShowCard = ({
-  show,
-  pathname,
-}: {
-  show: Show;
-  pathname: string;
-}) => {
+export const ShowCard = ({ show }: { show: Show }) => {
   const imageOnErrorHandler = (
     event: React.SyntheticEvent<HTMLImageElement, Event>,
   ) => {
@@ -104,26 +95,13 @@ export const ShowCard = ({
   };
 
   return (
-    // <picture className="relative aspect-[2/3] md:aspect-video">
-    <picture className="relative aspect-[2/3]">
-      <a
-        className="pointer-events-none"
-        aria-hidden={false}
-        role="link"
-        aria-label={getNameFromShow(show)}
-        href={`/${show.media_type}/${getSlug(show.id, getNameFromShow(show))}`}
-      />
-      {/* <source */}
-      {/*   // srcSet={`https://image.tmdb.org/t/p/w342/${show.poster_path ?? show.backdrop_path}`} */}
-      {/*   srcSet={ */}
-      {/*     show.backdrop_path ?? show.poster_path */}
-      {/*       ? `https://image.tmdb.org/t/p/w500/${ */}
-      {/*           show.backdrop_path ?? show.poster_path */}
-      {/*         }` */}
-      {/*       : '/images/grey-thumbnail.jpg' */}
-      {/*   } */}
-      {/*   media="(min-width: 780px)" */}
-      {/* /> */}
+    <Link
+      prefetch={false}
+      href={`/watch/${show.media_type === MediaType.TV ? 'tv' : 'movie'}/${
+        show.id
+      }`}
+      aria-label={`Watch ${getNameFromShow(show)}`}
+      className="group relative block aspect-[2/3] focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
       <img
         src={
           show.poster_path ?? show.backdrop_path
@@ -133,27 +111,12 @@ export const ShowCard = ({
             : '/images/grey-thumbnail.jpg'
         }
         alt={show.title ?? show.name ?? 'poster'}
-        className="h-full w-full cursor-pointer rounded-2xl border border-white/10 bg-white/5 object-cover p-0.5 shadow-lg transition duration-300 md:hover:-translate-y-1 md:hover:scale-105"
+        className="h-full w-full cursor-pointer rounded-2xl border border-zinc-800 bg-zinc-900 object-cover p-0.5 shadow-lg shadow-black/40 transition duration-300 group-hover:border-red-500/70 md:group-hover:-translate-y-1 md:group-hover:scale-105"
         style={{
           objectFit: 'cover',
         }}
-        onClick={() => {
-          const name = getNameFromShow(show);
-          const path: string =
-            show.media_type === MediaType.TV ? 'tv-shows' : 'movies';
-          window.history.pushState(
-            null,
-            '',
-            `${path}/${getSlug(show.id, name)}`,
-          );
-          useModalStore.setState({
-            show: show,
-            open: true,
-            play: true,
-          });
-        }}
         onError={imageOnErrorHandler}
       />
-    </picture>
+    </Link>
   );
 };

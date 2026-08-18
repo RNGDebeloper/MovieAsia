@@ -220,7 +220,7 @@ const ShowModal = () => {
             {modalStore.show?.title ?? modalStore.show?.name}
           </DialogTitle>
           <div className="flex items-center space-x-2 text-sm sm:text-base">
-            <p className="font-semibold text-green-400">
+            <p className="font-semibold text-red-500">
               {Math.round((Number(modalStore.show?.vote_average) / 10) * 100) ??
                 '-'}
               % Match
