@@ -4,8 +4,8 @@ import { env } from '@/env.mjs';
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: env.NEXT_PUBLIC_SITE_NAME || 'Ottfree',
-  author: env.NEXT_PUBLIC_SITE_NAME || 'Ottfree',
+  name: 'Ottfree',
+  author:'Ottfree',
   slogan: 'Premium movies and TV shows, free to watch.',
   description:
     'Ottfree helps you discover and watch movies and TV shows with a fast, cinematic, mobile-friendly streaming experience.',
