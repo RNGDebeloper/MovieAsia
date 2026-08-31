@@ -34,6 +34,11 @@ export const env = createEnv({
     NEXT_PUBLIC_FACEBOOK: z.string().url().optional(),
     NEXT_PUBLIC_INSTAGRAM: z.string().url().optional(),
     NEXT_PUBLIC_YOUTUBE: z.string().url().optional(),
+    NEXT_PUBLIC_ADS_HEAD_CODE: z.string().optional(),
+    NEXT_PUBLIC_AD_TOP_BANNER_CODE: z.string().optional(),
+    NEXT_PUBLIC_AD_NATIVE_DISCOVERY_CODE: z.string().optional(),
+    NEXT_PUBLIC_AD_WATCH_TOP_CODE: z.string().optional(),
+    NEXT_PUBLIC_AD_WATCH_VAST_CODE: z.string().optional(),
   },
 
   /**
@@ -69,6 +74,12 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_INSTAGRAM ?? 'https://instagram.com',
     NEXT_PUBLIC_YOUTUBE:
       process.env.NEXT_PUBLIC_YOUTUBE ?? 'https://youtube.com',
+    NEXT_PUBLIC_ADS_HEAD_CODE: process.env.NEXT_PUBLIC_ADS_HEAD_CODE,
+    NEXT_PUBLIC_AD_TOP_BANNER_CODE: process.env.NEXT_PUBLIC_AD_TOP_BANNER_CODE,
+    NEXT_PUBLIC_AD_NATIVE_DISCOVERY_CODE:
+      process.env.NEXT_PUBLIC_AD_NATIVE_DISCOVERY_CODE,
+    NEXT_PUBLIC_AD_WATCH_TOP_CODE: process.env.NEXT_PUBLIC_AD_WATCH_TOP_CODE,
+    NEXT_PUBLIC_AD_WATCH_VAST_CODE: process.env.NEXT_PUBLIC_AD_WATCH_VAST_CODE,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
