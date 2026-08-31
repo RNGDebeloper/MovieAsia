@@ -138,3 +138,23 @@ body,
   background-color: rgba(17, 17, 17, 0);
   background-image: -webkit-linear-gradient(top, rgba(17, 17, 17, 0), #111);
 }
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

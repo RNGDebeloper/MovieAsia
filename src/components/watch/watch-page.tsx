@@ -4,6 +4,7 @@ import { WatchBackButton } from '@/components/watch/back-button';
 import { getEnabledVideoServers } from '@/lib/video-servers';
 import MovieService from '@/services/MovieService';
 import VideoPlayer from './video-player';
+import { AdUnit } from '@/components/ad-unit';
 
 interface WatchPageProps {
   mediaType: 'movie' | 'tv';
@@ -30,10 +31,18 @@ export default async function WatchPage({
       <section className="mx-auto flex w-full max-w-[1800px] flex-col gap-6 px-3 py-4 sm:px-5 lg:px-8">
         <WatchBackButton />
 
+        <AdUnit label="Watch page top banner" className="max-w-[1200px]" />
+
         <VideoPlayer
           servers={servers}
           media={{ type: mediaType, id, season, episode }}
           title={title}
+        />
+
+        <AdUnit
+          label="VAST video demand slot"
+          format="vast"
+          className="max-w-[1200px]"
         />
 
         <section

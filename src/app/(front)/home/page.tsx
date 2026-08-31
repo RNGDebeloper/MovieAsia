@@ -5,6 +5,7 @@ import { siteConfig } from '@/configs/site';
 import { RequestType, type ShowRequest } from '@/enums/request-type';
 import MovieService from '@/services/MovieService';
 import { Genre } from '@/enums/genre';
+import { AdUnit } from '@/components/ad-unit';
 
 export const revalidate = 3600;
 
@@ -82,7 +83,13 @@ export default async function Home() {
     <>
       <h1 className="hidden">{h1}</h1>
       <Hero shows={allShows[0].shows} />
+      <AdUnit label="Top banner" className="mt-2 px-4 sm:px-6" />
       <ShowsContainer shows={allShows} />
+      <AdUnit
+        label="Native discovery banner"
+        format="native"
+        className="px-4 sm:px-6"
+      />
     </>
   );
 }

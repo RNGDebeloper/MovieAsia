@@ -120,13 +120,13 @@ export function MainNav({ items }: MainNavProps) {
   return (
     <nav
       className={cn(
-        'relative flex h-12 w-full items-center justify-between bg-gradient-to-b from-secondary/70 from-10% px-[4vw] transition-colors duration-300 md:sticky md:h-16',
-        isScrolled ? 'bg-secondary shadow-md' : 'bg-transparent',
+        'min-h-16 relative flex w-full flex-wrap items-center justify-between gap-3 px-4 py-3 transition-colors duration-300 sm:px-6 lg:flex-nowrap lg:px-10',
+        isScrolled ? 'bg-black/90 shadow-md' : 'bg-transparent',
       )}>
-      <div className="flex items-center gap-6 md:gap-10">
+      <div className="flex min-w-0 items-center gap-3 sm:gap-6 lg:gap-10">
         <Link
           href="/home"
-          className="hidden md:block"
+          className="hidden shrink-0 md:block"
           onClick={() => handleChangeStatusOpen(false)}>
           <div className="flex items-center space-x-2">
             <Icons.logo className="h-6 w-6" aria-hidden="true" />
@@ -135,7 +135,7 @@ export function MainNav({ items }: MainNavProps) {
           </div>
         </Link>
         {items?.length ? (
-          <nav className="hidden gap-6 md:flex">
+          <nav className="hidden flex-wrap gap-x-6 gap-y-2 lg:flex">
             {items?.map(
               (item, index) =>
                 item.href && (
@@ -154,7 +154,7 @@ export function MainNav({ items }: MainNavProps) {
             )}
           </nav>
         ) : null}
-        <div className="block md:hidden">
+        <div className="block lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -163,7 +163,7 @@ export function MainNav({ items }: MainNavProps) {
                 // className="h-auto px-2 py-1.5 text-base hover:bg-neutral-800 focus:ring-0 dark:hover:bg-neutral-800 lg:hidden"
               >
                 <Icons.logo className="h-6 w-6" />
-                <span className="text-base font-bold">Menu</span>
+                <span className="text-base font-bold">Ottfree</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -211,7 +211,7 @@ export function MainNav({ items }: MainNavProps) {
           </DropdownMenu>
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-2 lg:flex-none">
         <DebouncedInput
           id="search-input"
           open={searchStore.isOpen}
