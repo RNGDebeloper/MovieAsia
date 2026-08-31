@@ -1,12 +1,16 @@
-import { COOKIE_NAME, signAdminSession } from '@/lib/admin';
+import {
+  COOKIE_NAME,
+  getConfiguredAdminCredentials,
+  signAdminSession,
+} from '@/lib/admin';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   const form = await request.formData();
   const username = String(form.get('username') ?? '');
   const password = String(form.get('password') ?? '');
-  const configuredUsername = process.env.ADMIN_USERNAME;
-  const configuredPassword = process.env.ADMIN_PASSWORD;
+  const { username: configuredUsername, password: configuredPassword } =
+    getConfiguredAdminCredentials();
 
   if (
     !configuredUsername ||
