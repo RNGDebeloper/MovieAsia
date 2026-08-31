@@ -65,7 +65,38 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  category: 'entertainment',
   other: { referrer: 'no-referrer-when-downgrade' },
+};
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${siteConfig.url.replace(
+      /\/$/,
+      '',
+    )}/search?query={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 export default function RootLayout({
@@ -87,6 +118,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
           {/* <TrpcProvider> */}
+          <Script
+            id="website-structured-data"
+            type="application/ld+json"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          />
           {children}
           <TailwindIndicator />
           <Analytics />
@@ -96,6 +133,7 @@ export default function RootLayout({
             <>
               <Script
                 id="_next-ga-init"
+                strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
                   __html: `
           window.dataLayer = window.dataLayer || [];
@@ -107,6 +145,7 @@ export default function RootLayout({
               />
               <Script
                 id="_next-ga"
+                strategy="afterInteractive"
                 src={`https://www.googletagmanager.com/gtag/js?id=${env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID}`}
               />
             </>

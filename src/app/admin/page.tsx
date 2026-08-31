@@ -1,4 +1,4 @@
-import { isAdmin } from '@/lib/admin';
+import { getConfiguredAdminCredentials, isAdmin } from '@/lib/admin';
 import { getEnabledVideoServers, VIDEO_SERVERS } from '@/lib/video-servers';
 
 const adPlacements = [
@@ -18,6 +18,7 @@ export default function AdminPage() {
   const servers = getEnabledVideoServers();
   const maintenance = process.env.MAINTENANCE_MODE === 'true';
   const announcement = process.env.NEXT_PUBLIC_ANNOUNCEMENT_TITLE;
+  const credentials = getConfiguredAdminCredentials();
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 text-foreground">
@@ -66,10 +67,21 @@ export default function AdminPage() {
               Admin access is checked on the server with ADMIN_USERNAME,
               ADMIN_PASSWORD, and ADMIN_SESSION_SECRET.
             </p>
-            <p className="mt-3 text-zinc-400">
-              Set or rotate those values in your deployment environment. Do not
-              commit real credentials.
-            </p>
+            {credentials.usingDevelopmentFallback ? (
+              <div className="mt-4 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-100">
+                <p className="font-semibold">Development login</p>
+                <p>Username: {credentials.username}</p>
+                <p>Password: {credentials.password}</p>
+                <p className="mt-2 text-amber-200/80">
+                  These fallback credentials are disabled in production.
+                </p>
+              </div>
+            ) : (
+              <p className="mt-3 text-zinc-400">
+                Set or rotate those values in your deployment environment. Do
+                not commit real production credentials.
+              </p>
+            )}
           </Panel>
           <Panel title="Announcement management">
             <p>Current: {announcement || 'No active announcement'}</p>
@@ -126,7 +138,8 @@ function Login() {
         className="w-full max-w-sm rounded-3xl border border-zinc-800 bg-zinc-950/90 p-6 shadow-2xl shadow-black/50">
         <h1 className="text-2xl font-bold">Ottfree Admin</h1>
         <p className="mt-2 text-sm text-zinc-400">
-          Secure access requires server-side environment credentials.
+          Use your configured server-side credentials. In local development, the
+          fallback is admin / admin123.
         </p>
         <label className="mt-6 block text-sm">
           Username

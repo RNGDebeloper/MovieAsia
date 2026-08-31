@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { MediaType, type Show } from '@/types';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { cn, getNameFromShow } from '@/lib/utils';
@@ -90,11 +91,10 @@ const ShowsCarousel = ({ title, shows }: ShowsCarouselProps) => {
 export default ShowsCarousel;
 
 export const ShowCard = ({ show }: { show: Show }) => {
-  const imageOnErrorHandler = (
-    event: React.SyntheticEvent<HTMLImageElement, Event>,
-  ) => {
-    event.currentTarget.src = '/images/grey-thumbnail.jpg';
-  };
+  const imagePath = show.poster_path ?? show.backdrop_path;
+  const imageSrc = imagePath
+    ? `https://image.tmdb.org/t/p/w342/${imagePath}`
+    : '/images/grey-thumbnail.jpg';
 
   return (
     <Link
@@ -104,20 +104,12 @@ export const ShowCard = ({ show }: { show: Show }) => {
       }`}
       aria-label={`Watch ${getNameFromShow(show)}`}
       className="group relative block aspect-[2/3] focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black">
-      <img
-        src={
-          show.poster_path ?? show.backdrop_path
-            ? `https://image.tmdb.org/t/p/w500/${
-                show.poster_path ?? show.backdrop_path
-              }`
-            : '/images/grey-thumbnail.jpg'
-        }
+      <Image
+        src={imageSrc}
         alt={show.title ?? show.name ?? 'poster'}
-        className="h-full w-full cursor-pointer rounded-2xl border border-zinc-800 bg-zinc-900 object-cover p-0.5 shadow-lg shadow-black/40 transition duration-300 group-hover:border-red-500/70 md:group-hover:-translate-y-1 md:group-hover:scale-105"
-        style={{
-          objectFit: 'cover',
-        }}
-        onError={imageOnErrorHandler}
+        fill
+        sizes="(max-width: 480px) 42vw, (max-width: 640px) 34vw, (max-width: 768px) 25vw, (max-width: 1024px) 20vw, 16vw"
+        className="cursor-pointer rounded-2xl border border-zinc-800 bg-zinc-900 object-cover p-0.5 shadow-lg shadow-black/40 transition duration-300 group-hover:border-red-500/70 md:group-hover:-translate-y-1 md:group-hover:scale-105"
       />
     </Link>
   );
