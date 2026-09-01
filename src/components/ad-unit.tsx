@@ -1,7 +1,15 @@
+import { env } from '@/env.mjs';
 import { cn } from '@/lib/utils';
+
+type AdPlacement =
+  | 'top-banner'
+  | 'native-discovery'
+  | 'watch-top'
+  | 'watch-vast';
 
 type AdUnitProps = {
   label: string;
+  placement: AdPlacement;
   format?: 'banner' | 'native' | 'vast';
   className?: string;
 };
@@ -12,7 +20,31 @@ const formatCopy = {
   vast: 'VAST pre-roll slot',
 };
 
-export function AdUnit({ label, format = 'banner', className }: AdUnitProps) {
+const adCodes: Record<AdPlacement, string | undefined> = {
+  'top-banner': env.NEXT_PUBLIC_AD_TOP_BANNER_CODE,
+  'native-discovery': env.NEXT_PUBLIC_AD_NATIVE_DISCOVERY_CODE,
+  'watch-top': env.NEXT_PUBLIC_AD_WATCH_TOP_CODE,
+  'watch-vast': env.NEXT_PUBLIC_AD_WATCH_VAST_CODE,
+};
+
+export function AdUnit({
+  label,
+  placement,
+  format = 'banner',
+  className,
+}: AdUnitProps) {
+  const adCode = adCodes[placement]?.trim();
+
+  if (adCode) {
+    return (
+      <aside
+        aria-label={`${label} advertisement`}
+        className={cn('mx-auto w-full max-w-6xl', className)}
+        dangerouslySetInnerHTML={{ __html: adCode }}
+      />
+    );
+  }
+
   return (
     <aside
       aria-label={`${label} advertisement`}

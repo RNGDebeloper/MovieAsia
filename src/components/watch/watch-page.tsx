@@ -31,7 +31,11 @@ export default async function WatchPage({
       <section className="mx-auto flex w-full max-w-[1800px] flex-col gap-6 px-3 py-4 sm:px-5 lg:px-8">
         <WatchBackButton />
 
-        <AdUnit label="Watch page top banner" className="max-w-[1200px]" />
+        <AdUnit
+          label="Watch page top banner"
+          placement="watch-top"
+          className="max-w-[1200px]"
+        />
 
         <VideoPlayer
           servers={servers}
@@ -41,6 +45,7 @@ export default async function WatchPage({
 
         <AdUnit
           label="VAST video demand slot"
+          placement="watch-vast"
           format="vast"
           className="max-w-[1200px]"
         />

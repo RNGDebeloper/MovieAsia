@@ -124,6 +124,15 @@ export default function RootLayout({
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
           />
+          {env.NEXT_PUBLIC_ADS_HEAD_CODE && (
+            <Script
+              id="ads-provider-code"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: env.NEXT_PUBLIC_ADS_HEAD_CODE,
+              }}
+            />
+          )}
           {children}
           <TailwindIndicator />
           <Analytics />

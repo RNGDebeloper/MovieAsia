@@ -83,10 +83,15 @@ export default async function Home() {
     <>
       <h1 className="hidden">{h1}</h1>
       <Hero shows={allShows[0].shows} />
-      <AdUnit label="Top banner" className="mt-2 px-4 sm:px-6" />
+      <AdUnit
+        label="Top banner"
+        placement="top-banner"
+        className="mt-2 px-4 sm:px-6"
+      />
       <ShowsContainer shows={allShows} />
       <AdUnit
         label="Native discovery banner"
+        placement="native-discovery"
         format="native"
         className="px-4 sm:px-6"
       />
