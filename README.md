@@ -50,7 +50,10 @@ Leave ad unit variables blank to keep the built-in placeholder boxes visible.
 3. Fill in the secret environment variables prompted by the blueprint.
 4. Set `NEXT_PUBLIC_APP_URL` to the Render service URL after the first deploy if you do not have a custom domain yet.
 
-Render uses the Dockerfile and checks `/api/health` for service health.
+Render uses the Dockerfile, listens on its required port (`10000`), and checks
+`/api/health` for service health. The health endpoint remains available while
+maintenance mode is enabled, so it will not cause an otherwise healthy service
+to be marked unavailable.
 
 ## Deploying to Koyeb
 

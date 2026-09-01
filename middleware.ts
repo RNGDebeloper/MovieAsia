@@ -16,6 +16,7 @@ export function middleware(request: NextRequest) {
     !hasAdminSession &&
     !pathname.startsWith('/admin') &&
     !pathname.startsWith('/api/admin') &&
+    !pathname.startsWith('/api/health') &&
     !pathname.startsWith('/maintenance') &&
     !pathname.startsWith('/_next')
   ) {
