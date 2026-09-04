@@ -8,6 +8,12 @@ RUN npm ci
 FROM node:20-alpine AS builder
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
+# Keep the credential server-only. Render injects TMDB_API_TOKEN at runtime;
+# manual Docker builds that intentionally make build-time TMDB requests can
+# provide it with: --build-arg TMDB_API_TOKEN=... . It is not copied into the
+# final image.
+ARG TMDB_API_TOKEN
+ENV TMDB_API_TOKEN=$TMDB_API_TOKEN
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build

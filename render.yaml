@@ -12,8 +12,10 @@ services:
         value: 10000
       - key: NEXT_PUBLIC_APP_URL
         sync: false
-      - key: NEXT_PUBLIC_TMDB_TOKEN
+      - key: TMDB_API_TOKEN
         sync: false
+      - key: NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED
+        value: true
       - key: ADMIN_USERNAME
         sync: false
       - key: ADMIN_PASSWORD
