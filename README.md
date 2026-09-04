@@ -25,7 +25,7 @@ A movie and series streaming website.
 2. Navigate to the project directory.
 3. Install dependencies: `npm install`.
 4. Create an environment file: `cp .env.example .env`.
-5. Add your TMDb token to `NEXT_PUBLIC_TMDB_TOKEN`.
+5. Add your TMDb v4 API Read Access Token to `TMDB_API_TOKEN`.
 6. Start the development server: `npm run dev`.
 
 ## Environment variables
@@ -33,8 +33,9 @@ A movie and series streaming website.
 Copy `.env.example` and configure these production values in your hosting provider:
 
 - `NEXT_PUBLIC_APP_URL`: Your public site URL, for example `https://movieasia.onrender.com`.
-- `NEXT_PUBLIC_TMDB_TOKEN`: TMDb API bearer token used for movie data.
+- `TMDB_API_TOKEN`: Server-only TMDb v4 API Read Access Token used for movie data. Do not use a `NEXT_PUBLIC_` prefix.
 - `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`: Admin login configuration.
+- `NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED`: Set to `true` (default) to block iframe popups and top-page redirects. Viewers can temporarily turn it off from the player if a provider needs compatibility mode.
 - `NEXT_PUBLIC_ADS_HEAD_CODE`: Optional provider-wide ad script/config. Add JavaScript only, without wrapping `<script>` tags.
 - `NEXT_PUBLIC_AD_TOP_BANNER_CODE`: Home page top banner ad unit markup.
 - `NEXT_PUBLIC_AD_NATIVE_DISCOVERY_CODE`: Home page native/discovery ad unit markup.
@@ -55,6 +56,13 @@ Render uses the Dockerfile, listens on its required port (`10000`), and checks
 maintenance mode is enabled, so it will not cause an otherwise healthy service
 to be marked unavailable.
 
+`TMDB_API_TOKEN` is a runtime environment variable on Render and is never sent
+to browsers. The application renders TMDB-backed routes dynamically, so Docker
+builds do not call TMDB. If a custom Docker build deliberately enables
+build-time TMDB requests, pass the same secret with
+`--build-arg TMDB_API_TOKEN=...`; the build-stage value is not copied to the
+final image.
+
 ## Deploying to Koyeb
 
 1. Push this repository to GitHub.
@@ -67,6 +75,11 @@ Koyeb builds the Dockerfile, exposes port `3000`, and uses `/api/health` for hea
 ## Admin credentials
 
 Admin login is configured only with server-side environment variables. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_SESSION_SECRET` in your local `.env` file or deployment provider. Do not commit real production credentials.
+
+The login endpoint uses a POST/redirect/GET flow, so a successful sign-in always
+lands on the dashboard instead of replaying the form submission. If login fails
+on Render, confirm that both `ADMIN_USERNAME` and `ADMIN_PASSWORD` are set on
+the **web service** and redeploy after changing them.
 
 ## Contributing
 

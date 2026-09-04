@@ -4,7 +4,6 @@ import axios, {
   type AxiosInstance,
   type InternalAxiosRequestConfig,
 } from 'axios';
-import { env } from '@/env.mjs';
 
 /**
  * @class BaseService
@@ -17,16 +16,25 @@ class BaseService {
   }
 
   static axios(baseUrl: string) {
-    const instanceConfig: AxiosRequestConfig = this.getConfig(baseUrl);
+    const isTmdbRequest = baseUrl.includes('themoviedb.org');
+    // Client components use our server-side proxy so a TMDB credential is
+    // never bundled into JavaScript sent to the browser.
+    const resolvedBaseUrl =
+      isTmdbRequest && typeof window !== 'undefined' ? '/api/tmdb' : baseUrl;
+    const instanceConfig: AxiosRequestConfig = this.getConfig(resolvedBaseUrl);
     const instance: AxiosInstance = axios.create(instanceConfig);
 
     const onRequest = (
       config: InternalAxiosRequestConfig,
     ): InternalAxiosRequestConfig => {
-      if (config.baseURL?.includes('themoviedb')) {
-        // const params = config.params as Record<string, unknown>;
-        // config.params = { ...params, api_key: env.NEXT_PUBLIC_TMDB_API_KEY };
-        config.headers.Authorization = `Bearer ${env.NEXT_PUBLIC_TMDB_TOKEN}`;
+      if (config.baseURL?.includes('themoviedb.org')) {
+        const token = process.env.TMDB_API_TOKEN;
+        if (!token) {
+          throw new Error(
+            'TMDB_API_TOKEN is required to make TMDB API requests. Set it in the deployment environment (and pass it as a Docker build argument when build-time requests are enabled).',
+          );
+        }
+        config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     };
