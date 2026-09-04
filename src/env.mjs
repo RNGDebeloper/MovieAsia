@@ -26,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_NAME: z.string().default('Ottfree'),
     NEXT_PUBLIC_DEFAULT_VIDEO_SERVER: z.string().optional(),
     NEXT_PUBLIC_DISABLED_VIDEO_SERVERS: z.string().optional(),
+    NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED: z.enum(['true', 'false']).default('true'),
     NEXT_PUBLIC_MAINTENANCE_MESSAGE: z.string().optional(),
     NEXT_PUBLIC_ANNOUNCEMENT_TITLE: z.string().optional(),
     NEXT_PUBLIC_ANNOUNCEMENT_MESSAGE: z.string().optional(),
@@ -61,6 +62,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_DEFAULT_VIDEO_SERVER,
     NEXT_PUBLIC_DISABLED_VIDEO_SERVERS:
       process.env.NEXT_PUBLIC_DISABLED_VIDEO_SERVERS,
+    NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED:
+      process.env.NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED ?? 'true',
     NEXT_PUBLIC_MAINTENANCE_MESSAGE:
       process.env.NEXT_PUBLIC_MAINTENANCE_MESSAGE,
     NEXT_PUBLIC_ANNOUNCEMENT_TITLE: process.env.NEXT_PUBLIC_ANNOUNCEMENT_TITLE,

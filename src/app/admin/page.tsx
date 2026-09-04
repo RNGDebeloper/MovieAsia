@@ -10,14 +10,19 @@ const adPlacements = [
   'Footer',
 ];
 
-export default function AdminPage() {
+export default function AdminPage({
+  searchParams,
+}: {
+  searchParams?: { error?: string };
+}) {
   if (!isAdmin()) {
-    return <Login />;
+    return <Login showError={searchParams?.error === 'invalid-credentials'} />;
   }
 
   const servers = getEnabledVideoServers();
   const maintenance = process.env.MAINTENANCE_MODE === 'true';
   const announcement = process.env.NEXT_PUBLIC_ANNOUNCEMENT_TITLE;
+  const sandboxEnabled = process.env.NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED !== 'false';
   const credentials = getConfiguredAdminCredentials();
 
   return (
@@ -47,6 +52,7 @@ export default function AdminPage() {
             label="Announcement"
             value={announcement ? 'Active' : 'Inactive'}
           />
+          <Metric label="Player sandbox" value={sandboxEnabled ? 'On' : 'Off'} />
         </section>
         <section className="grid gap-6 lg:grid-cols-2">
           <Panel title="General settings">
@@ -58,6 +64,7 @@ export default function AdminPage() {
               <li>NEXT_PUBLIC_SITE_NAME</li>
               <li>NEXT_PUBLIC_DEFAULT_VIDEO_SERVER</li>
               <li>NEXT_PUBLIC_DISABLED_VIDEO_SERVERS</li>
+              <li>NEXT_PUBLIC_VIDEO_SANDBOX_ENABLED (true or false)</li>
               <li>MAINTENANCE_MODE</li>
               <li>NEXT_PUBLIC_MAINTENANCE_MESSAGE</li>
             </ul>
@@ -129,7 +136,7 @@ export default function AdminPage() {
   );
 }
 
-function Login() {
+function Login({ showError }: { showError: boolean }) {
   return (
     <main className="grid min-h-screen place-items-center bg-background px-4 text-foreground">
       <form
@@ -141,6 +148,14 @@ function Login() {
           Use your configured server-side credentials. In local development, the
           fallback is admin / admin123.
         </p>
+        {showError ? (
+          <p
+            role="alert"
+            className="mt-4 rounded-xl border border-red-500/40 bg-red-950/40 p-3 text-sm text-red-100">
+            The username or password is incorrect. Check your Render environment
+            variables and try again.
+          </p>
+        ) : null}
         <label className="mt-6 block text-sm">
           Username
           <input

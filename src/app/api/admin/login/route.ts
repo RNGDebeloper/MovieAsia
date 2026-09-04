@@ -18,10 +18,15 @@ export async function POST(request: Request) {
     username !== configuredUsername ||
     password !== configuredPassword
   ) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    const url = new URL('/admin', request.url);
+    url.searchParams.set('error', 'invalid-credentials');
+    return NextResponse.redirect(url, 303);
   }
 
-  const response = NextResponse.redirect(new URL('/admin', request.url));
+  // A POST must not be replayed after a successful login. The default 307
+  // redirect preserves the POST method, which made browsers request POST
+  // /admin (and left users unable to reach the dashboard).
+  const response = NextResponse.redirect(new URL('/admin', request.url), 303);
   response.cookies.set(COOKIE_NAME, signAdminSession(username), {
     httpOnly: true,
     sameSite: 'lax',

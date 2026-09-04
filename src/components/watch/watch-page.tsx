@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 
 import { WatchBackButton } from '@/components/watch/back-button';
 import { getEnabledVideoServers } from '@/lib/video-servers';
@@ -11,6 +12,38 @@ interface WatchPageProps {
   id: string;
   season?: string;
   episode?: string;
+}
+
+export async function buildWatchMetadata({
+  mediaType,
+  id,
+}: Pick<WatchPageProps, 'mediaType' | 'id'>): Promise<Metadata> {
+  try {
+    const show = await MovieService.findMovieByIdAndType(Number(id), mediaType);
+    const title = show.title ?? show.name ?? 'Watch now';
+    const description =
+      show.overview ?? `Watch ${title} on Ottfree.`;
+    const image = show.backdrop_path ?? show.poster_path;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: `/watch/${mediaType}/${id}` },
+      openGraph: {
+        title,
+        description,
+        type: mediaType === 'movie' ? 'video.movie' : 'video.tv_show',
+        images: image ? [`https://image.tmdb.org/t/p/w1280/${image}`] : [],
+      },
+      twitter: { card: 'summary_large_image', title, description },
+    };
+  } catch {
+    return {
+      title: 'Watch now',
+      description: 'Watch movies and TV shows on Ottfree.',
+      robots: { index: false, follow: false },
+    };
+  }
 }
 
 export default async function WatchPage({
